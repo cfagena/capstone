@@ -7,8 +7,6 @@ Blockchain course capstone project
 
 The capstone will build upon the knowledge you have gained in the course in order to build a decentralized housing product. 
 
--
-
 # Project Resources
 
 * [Remix - Solidity IDE](https://remix.ethereum.org/)
