@@ -11,26 +11,25 @@ contract('TestSquareVerifier', accounts => {
     describe('test verifier', function () {
         beforeEach(async function () { 
             this.contract = await Verifier.new({from: account_one});
-        })
-    });
-
-    // Test verification with correct proof
-    it('should return correct proof given correct inputs', async function () { 
-        //console.log(`contract: ${this.contract}`);
-
-        const result = await this.contract.verifyTx.call(_proof.a, _proof.b, _proof.c, proof.inputs, {
-            from: account_one,
         });
 
-        assert.equal(result, true, "Wrong verification");
+        // Test verification with correct proof
+        it('should return correct proof given correct inputs', async function () { 
+            const result = await this.contract.verifyTx.call(proof.proof, proof.inputs, {
+                from: account_one,
+            });
 
-        //console.log(`result: ${result}`);
+            assert.equal(result, true, "Wrong verification");
+        });
+
+        // Test verification with incorrect proof
+        it('should return incorrect proof given incorrect inputs', async function () { 
+            const result = await this.contract.verifyTx.call(proof.proof, [0,0], {
+                from: account_one,
+            });
+
+            assert.equal(result, false, "Wrong verification");
+        });
     });
-
-    // Test verification with incorrect proof
-    it('should return incorrect proof given incorrect inputs', async function () { 
-        
-    });
-
 
 });
