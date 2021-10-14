@@ -15,13 +15,14 @@ contract('TestSquareVerifier', accounts => {
     });
 
     // Test verification with correct proof
-    // 
     it('should return correct proof given correct inputs', async function () { 
-        console.log(`contract: ${this.contract}`);
+        //console.log(`contract: ${this.contract}`);
 
-        // const result = await this.contract.verifyTx.call(_proof.a, _proof.b, _proof.c, proof.inputs, {
-        //     from: account_one,
-        // });
+        const result = await this.contract.verifyTx.call(_proof.a, _proof.b, _proof.c, proof.inputs, {
+            from: account_one,
+        });
+
+        assert.equal(result, true, "Wrong verification");
 
         //console.log(`result: ${result}`);
     });
