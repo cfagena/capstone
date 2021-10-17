@@ -2,7 +2,8 @@
 var Verifier = artifacts.require('Verifier');
 
 // use the contents from proof.json generated from zokrates steps
-const proof = require('../../zokrates/code/square/proof.json');
+const proof39 = require('./proof39.json');
+const proof416 = require('./proof416.json');
    
 contract('TestSquareVerifier', accounts => {
 
@@ -15,16 +16,23 @@ contract('TestSquareVerifier', accounts => {
 
         // Test verification with correct proof
         it('should return correct proof given correct inputs', async function () { 
-            const result = await this.contract.verifyTx.call(proof.proof, proof.inputs, {
+            let result = await this.contract.verifyTx.call(proof39.proof, proof39.inputs, {
                 from: account_one,
             });
 
-            assert.equal(result, true, "Wrong verification");
+            assert.equal(result, true, "Wrong verification for 3*3");
+
+            result = await this.contract.verifyTx.call(proof416.proof, proof416.inputs, {
+                from: account_one,
+            });
+
+            assert.equal(result, true, "Wrong verification for 4*4");
+
         });
 
         // Test verification with incorrect proof
         it('should return incorrect proof given incorrect inputs', async function () { 
-            const result = await this.contract.verifyTx.call(proof.proof, [0,0], {
+            const result = await this.contract.verifyTx.call(proof416.proof, [0,0], {
                 from: account_one,
             });
 
