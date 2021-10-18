@@ -30,11 +30,14 @@ contract SolnSquareVerifier is CustomERC721Token {
 
     // TODO Create an event to emit when a solution is added
     event SolutionAdded(uint256, address); 
+    event Log(uint256);
+
+    function getSolutionLength() public returns(uint256) {
+        return solutions.length;
+    }
 
     // TODO Create a function to add the solutions to the array and emit the event
     function addSolution(address solutionAddress) public returns(uint256) {
-        solutionLength++;
-
         Solution memory newSolution = Solution({
             index: solutionLength,
             ownerAddress: solutionAddress
@@ -43,23 +46,31 @@ contract SolnSquareVerifier is CustomERC721Token {
         solutions.push(newSolution);
 
         emit SolutionAdded(newSolution.index, newSolution.ownerAddress);
-        return solutionLength;
+
+        uint256 index = solutionLength;
+        solutionLength++;
+
+        return index;
     } 
 
     // TODO Create a function to mint new NFT only after the solution has been verified
     //  - make sure the solution is unique (has not been used before)
     //  - make sure you handle metadata as well as tokenSuplly
-    // function mintNewNFT(address to, uint256 tokenId, Proof proof, uint[2] memory inputs)
-    // public {
-    //     bytes32 key = keccak256(abi.encodePacked(a, b, c, inputs));
-    //     require(usedSolutions[key].index > 0, "Solution already used.");
-    //     require(verifier.verifyTx(proof, inputs), "Verification failed");
+    function mintNewNFT(address to, uint256 tokenId, Verifier.Proof memory proof, uint[2] memory inputs)
+    public {
+        bytes32 key = keccak256(abi.encodePacked(proof.a.X, proof.a.Y, proof.b.X, proof.b.Y, proof.c.X, proof.c.Y, inputs));
 
-    //     uint256 index = addSolution(to);
-    //     usedSolutions[key] = solutions[index];
+        require(usedSolutions[key].index == 0, "Solution already used.");
+        require(verifier.verifyTx(proof, inputs), "Verification failed");
 
-    //     mint(to, tokenId);       
-    // }
+        uint256 index = addSolution(to);
+
+        emit Log(index);
+
+        usedSolutions[key] = solutions[index];
+
+        mint(to, tokenId);       
+    }
 
 
 }
