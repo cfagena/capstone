@@ -29,10 +29,9 @@ contract SolnSquareVerifier is CustomERC721Token {
     mapping(bytes32 => Solution) private usedSolutions;
 
     // TODO Create an event to emit when a solution is added
-    event SolutionAdded(uint256, address); 
-    event Log(uint256);
+    event SolutionAdded(uint256, address);
 
-    function getSolutionLength() public returns(uint256) {
+    function getSolutionLength() public view returns(uint256) {
         return solutions.length;
     }
 
@@ -64,9 +63,6 @@ contract SolnSquareVerifier is CustomERC721Token {
         require(verifier.verifyTx(proof, inputs), "Verification failed");
 
         uint256 index = addSolution(to);
-
-        emit Log(index);
-
         usedSolutions[key] = solutions[index];
 
         mint(to, tokenId);       
